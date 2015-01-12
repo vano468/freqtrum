@@ -1,0 +1,6 @@
+.idea
+
+assets/*.css
+assets/*.js
+
+media/*.mp3
