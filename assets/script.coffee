@@ -36,6 +36,9 @@ class Drawler
   setTitle: (title) ->
     $('#title').text title
 
+  setVisibility: ->
+    $('#time-based').css 'display', 'block'
+
   drawFrequencyBased: (array) ->
     ctxFrqBased.clearRect 0, 0,
       config.frqBased.width, config.frqBased.height
@@ -98,6 +101,7 @@ class Player
     request.onload = ->
       context.decodeAudioData request.response, (buffer) ->
         drawler.setTitle song.title
+        drawler.setVisibility()
         playSound buffer
       , onError
     request.send()
@@ -116,11 +120,12 @@ class Player
     init()
 
   playRandom: ->
-    while true
-      index = Math.floor(Math.random() * @playlist.length)
-      unless @currentPlaying == index
-        @currentPlaying = index
-        break
+    @currentPlaying = Math.floor(Math.random() * @playlist.length)
+    loadThenPlay @playlist[@currentPlaying]
+
+  playNext: ->
+    @currentPlaying++
+    @currentPlaying = 0 if @currentPlaying >= @playlist.length
     loadThenPlay @playlist[@currentPlaying]
 
 
@@ -139,4 +144,4 @@ player = new Player [
 player.playRandom()
 
 $(document).keydown (e) ->
-  player.playRandom() if e.keyCode == 13
+  player.playNext() if e.keyCode == 13
