@@ -1,19 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Loading and playing a sound with the Web Audio API</title>
+  <title>Freqtrum: real-time frequency spectrum drawing</title>
   <link rel="stylesheet" href="assets/styles.css"/>
 </head>
 <body>
 
 <div class="wrapper">
   <div class="spectrum">
-    <canvas id="canvas" width="1000" height="330"></canvas>
+    <canvas id="frequency-based" class="canvas" width="1000" height="330"></canvas>
+    <canvas id="time-based" class="canvas" width="999" height="330"></canvas>
     <span   id="title">Please Wait</span>
   </div>
 </div>
 
 <script src="lib/jquery-1.8.0.min.js"></script>
+<script src="lib/chroma.js"></script>
 <script src="assets/script.js"></script>
 
 </body>

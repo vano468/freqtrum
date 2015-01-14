@@ -2,23 +2,63 @@
 
 class Drawler
 
-  constructor: ->
-    @ctx = $('#canvas').get()[0].getContext '2d'
+  hot = new chroma.ColorScale
+    colors: ['#000000', '#ff0000', '#ffff00', '#ffffff']
+    positions: [0, .25, .75, 1]
+    mode: 'rgb'
+    limits: [0, 300]
 
-    @gradient = @ctx.createLinearGradient 0, 0, 0, 300
-    @gradient.addColorStop 1,    '#000000'
-    @gradient.addColorStop 0.75, '#ff0000'
-    @gradient.addColorStop 0.25, '#ffff00'
-    @gradient.addColorStop 0,    '#ffffff'
+  config =
+    frqBased:
+      width: 1000
+      height: 330
+    timeBased:
+      width: 999
+      height: 330
+
+  # init for frequency based
+  ctxFrqBased = $('#frequency-based').get()[0].getContext '2d'
+
+  gradient = ctxFrqBased.createLinearGradient 0, 0, 0, 300
+  gradient.addColorStop 1,    '#000000'
+  gradient.addColorStop 0.75, '#ff0000'
+  gradient.addColorStop 0.25, '#ffff00'
+  gradient.addColorStop 0,    '#ffffff'
+
+  # init for time based
+  ctxTimeBased = $("#time-based").get()[0].getContext '2d'
+
+  tempCanvasTimeBased = document.createElement 'canvas'
+  tempCtxTimeBased = tempCanvasTimeBased.getContext '2d'
+  tempCanvasTimeBased.width  = config.timeBased.width
+  tempCanvasTimeBased.height = config.timeBased.height
 
   setTitle: (title) ->
     $('#title').text title
 
-  drawSpectrum: (array) ->
-    @ctx.clearRect 0, 0, 1000, 325
-    @ctx.fillStyle = @gradient
+  drawFrequencyBased: (array) ->
+    ctxFrqBased.clearRect 0, 0,
+      config.frqBased.width, config.frqBased.height
+    ctxFrqBased.fillStyle = gradient
     for value, i in array
-      @ctx.fillRect i * 5, 325-value, 4, 325
+      ctxFrqBased.fillRect i * 5, config.frqBased.height - value,
+        4, config.frqBased.height
+
+  drawTimeBased: (array) ->
+    canvas = document.getElementById 'time-based'
+    tempCtxTimeBased.drawImage canvas, 0, 0,
+      config.timeBased.width, config.timeBased.height
+
+    for value, i in array
+      ctxTimeBased.fillStyle = hot.getColor(value).hex()
+      ctxTimeBased.fillRect config.timeBased.width - 1,
+        config.timeBased.height - i, 1, 1
+
+    ctxTimeBased.translate -1, 0
+    ctxTimeBased.drawImage tempCanvasTimeBased,
+      0, 0, config.timeBased.width, config.timeBased.height,
+      0, 0, config.timeBased.width, config.timeBased.height
+    ctxTimeBased.setTransform 1, 0, 0, 1, 0, 0
 
 
 class Player
@@ -37,7 +77,7 @@ class Player
 
     analyser = context.createAnalyser()
     analyser.smoothingTimeConstant = 0.3
-    analyser.fftSize = 512
+    analyser.fftSize = 1024
 
     sourceNode = context.createBufferSource()
     sourceNode.connect analyser
@@ -47,7 +87,8 @@ class Player
     javascriptNode.onaudioprocess = ->
       data = new Uint8Array analyser.frequencyBinCount
       analyser.getByteFrequencyData data
-      drawler.drawSpectrum data
+      drawler.drawFrequencyBased data
+      drawler.drawTimeBased data
 
   loadThenPlay = (song) ->
     request = new XMLHttpRequest()
@@ -71,10 +112,16 @@ class Player
   # public
 
   constructor: (@playlist) ->
+    @currentPlaying = 0
     init()
 
   playRandom: ->
-    loadThenPlay @playlist[Math.floor(Math.random() * @playlist.length)]
+    while true
+      index = Math.floor(Math.random() * @playlist.length)
+      unless @currentPlaying == index
+        @currentPlaying = index
+        break
+    loadThenPlay @playlist[@currentPlaying]
 
 
 unless window.AudioContext
@@ -82,12 +129,14 @@ unless window.AudioContext
     alert 'Audiocontext not found'
   window.AudioContext = window.webkitAudioContext
 
-new Player [
+player = new Player [
   { path: 'media/drink.mp3', title: 'Alestorm - Drink' }
   { path: 'media/survives.mp3', title: 'Nekrogoblikon - No One Survives' }
-  { path: 'media/tequila.mp3', title: 'Korpiklaani - Tequila' }
   { path: 'media/everything.mp3', title: 'Derdian - In Everything' }
-  { path: 'media/speedhoven.mp3', title: 'Edguy - Speedhoven' }
+  { path: 'media/attero.mp3', title: 'Sabaton - Attero Dominatus' }
   { path: 'media/eternity.mp3', title: 'Freedom Call - Beyond Eternity' }
 ]
-.playRandom()
+player.playRandom()
+
+$(document).keydown (e) ->
+  player.playRandom() if e.keyCode == 13
