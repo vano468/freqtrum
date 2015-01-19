@@ -44,8 +44,8 @@ class Drawler
       config.frqBased.width, config.frqBased.height
     ctxFrqBased.fillStyle = gradient
     for value, i in array
-      ctxFrqBased.fillRect i * 5, config.frqBased.height - value,
-        4, config.frqBased.height
+      ctxFrqBased.fillRect i * 4, config.frqBased.height - value,
+        3, config.frqBased.height
 
   drawTimeBased: (array) ->
     canvas = document.getElementById 'time-based'
@@ -79,7 +79,7 @@ class Player
     javascriptNode.connect context.destination
 
     analyser = context.createAnalyser()
-    analyser.smoothingTimeConstant = 0.3
+    analyser.smoothingTimeConstant = 0.2
     analyser.fftSize = 1024
 
     sourceNode = context.createBufferSource()
@@ -120,7 +120,7 @@ class Player
     init()
 
   playRandom: ->
-    @currentPlaying = Math.floor(Math.random() * @playlist.length)
+    @currentPlaying = 0
     loadThenPlay @playlist[@currentPlaying]
 
   playNext: ->
@@ -135,10 +135,10 @@ unless window.AudioContext
   window.AudioContext = window.webkitAudioContext
 
 player = new Player [
-  { path: 'media/drink.mp3', title: 'Alestorm - Drink' }
-  { path: 'media/everything.mp3', title: 'Derdian - In Everything' }
-  { path: 'media/attero.mp3', title: 'Sabaton - Attero Dominatus' }
-  { path: 'media/eternity.mp3', title: 'Freedom Call - Beyond Eternity' }
+  { path: 'media/1.mp3', title: 'Example 1' }
+  { path: 'media/2.wav', title: 'Example 2' }
+  { path: 'media/3.wav', title: 'Example 3' }
+  { path: 'media/4.wav', title: 'Example 4' }
 ]
 player.playRandom()
 

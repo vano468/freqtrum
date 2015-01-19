@@ -63,7 +63,7 @@
       _results = [];
       for (i = _i = 0, _len = array.length; _i < _len; i = ++_i) {
         value = array[i];
-        _results.push(ctxFrqBased.fillRect(i * 5, config.frqBased.height - value, 4, config.frqBased.height));
+        _results.push(ctxFrqBased.fillRect(i * 4, config.frqBased.height - value, 3, config.frqBased.height));
       }
       return _results;
     };
@@ -103,7 +103,7 @@
       javascriptNode = context.createScriptProcessor(2048, 1, 1);
       javascriptNode.connect(context.destination);
       analyser = context.createAnalyser();
-      analyser.smoothingTimeConstant = 0.3;
+      analyser.smoothingTimeConstant = 0.2;
       analyser.fftSize = 1024;
       sourceNode = context.createBufferSource();
       sourceNode.connect(analyser);
@@ -149,7 +149,7 @@
     }
 
     Player.prototype.playRandom = function() {
-      this.currentPlaying = Math.floor(Math.random() * this.playlist.length);
+      this.currentPlaying = 0;
       return loadThenPlay(this.playlist[this.currentPlaying]);
     };
 
@@ -174,17 +174,17 @@
 
   player = new Player([
     {
-      path: 'media/drink.mp3',
-      title: 'Alestorm - Drink'
+      path: 'media/1.mp3',
+      title: 'Example 1'
     }, {
-      path: 'media/everything.mp3',
-      title: 'Derdian - In Everything'
+      path: 'media/2.wav',
+      title: 'Example 2'
     }, {
-      path: 'media/attero.mp3',
-      title: 'Sabaton - Attero Dominatus'
+      path: 'media/3.wav',
+      title: 'Example 3'
     }, {
-      path: 'media/eternity.mp3',
-      title: 'Freedom Call - Beyond Eternity'
+      path: 'media/4.wav',
+      title: 'Example 4'
     }
   ]);
 
