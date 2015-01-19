@@ -1,0 +1,16 @@
+.wrapper {
+  width: 1000px;
+  margin: auto; }
+  .wrapper .spectrum {
+    margin-top: 40px; }
+    .wrapper .spectrum .canvas {
+      display: block; }
+    .wrapper .spectrum #time-based {
+      background: black;
+      display: none; }
+    .wrapper .spectrum #title {
+      display: block;
+      font-size: 48px;
+      margin-top: 12px;
+      text-align: center;
+      font-family: monospace; }

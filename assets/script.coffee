@@ -136,7 +136,6 @@ unless window.AudioContext
 
 player = new Player [
   { path: 'media/drink.mp3', title: 'Alestorm - Drink' }
-  { path: 'media/survives.mp3', title: 'Nekrogoblikon - No One Survives' }
   { path: 'media/everything.mp3', title: 'Derdian - In Everything' }
   { path: 'media/attero.mp3', title: 'Sabaton - Attero Dominatus' }
   { path: 'media/eternity.mp3', title: 'Freedom Call - Beyond Eternity' }
