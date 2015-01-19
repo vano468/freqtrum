@@ -28,6 +28,8 @@ $ node server.js
 
 ## Плейлист
 
+Переключение песен осуществляется по нажатию *Enter*
+
 ```javascript
 player = new Player [
   { path: 'media/drink.mp3', title: 'Alestorm - Drink' },
